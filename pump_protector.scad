@@ -26,6 +26,11 @@ pipe_notch_depth = 50;   // How far the U-shape cuts down from the top (mm)
 // --- Rounded Edge Parameters ---
 corner_radius = 5;
 
+// --- Pyramid Parameters ---
+pyramid_overhang = 5;    // How far pyramid base extends beyond lid on each side (mm)
+pyramid_height   = 20;   // Height of the pyramid above the lid plate (mm)
+pyramid_wall     = 3;    // Wall thickness of the hollow pyramid shell (mm)
+
 // --- Resolution ---
 $fn = 60;
 
@@ -51,6 +56,19 @@ module rounded_box(l, w, h, r) {
             for (y = [r, w - r])
                 translate([x, y, 0])
                     cylinder(r = r, h = h);
+    }
+}
+
+// Solid rectangular pyramid
+// Origin: centered at base center, base at z=0, apex at z=h
+module solid_pyramid(base_l, base_w, h) {
+    hull() {
+        // Base rectangle at z=0
+        translate([-base_l/2, -base_w/2, 0])
+            cube([base_l, base_w, 0.01]);
+        // Apex point at z=h
+        translate([0, 0, h])
+            sphere(d=0.02);
     }
 }
 
@@ -103,6 +121,18 @@ module protector_lid() {
                         lip_height + 2,
                         corner_radius
                     );
-            }
+            };
     }
+}
+
+// Pyramid cap (sits on top of the lid)
+module protector_pyramid() {
+    grip_wall   = wall;
+    grip_length = box_length + 2 * (grip_wall + lip_clearance);
+    grip_width  = box_width  + 2 * (grip_wall + lip_clearance);
+
+    pyr_base_l = grip_length + 2 * pyramid_overhang;
+    pyr_base_w = grip_width  + 2 * pyramid_overhang;
+
+    solid_pyramid(pyr_base_l, pyr_base_w, pyramid_height);
 }
