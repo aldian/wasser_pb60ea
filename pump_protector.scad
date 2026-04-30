@@ -8,8 +8,8 @@
 
 // --- Main Parameters ---
 box_length = 180;   // X dimension (mm)
-box_width  = 140;   // Y dimension (mm)
-box_height = 160;   // Z dimension (mm)
+box_width  = 155;   // Y dimension (mm) (Depth from front to back)
+box_height = 140;   // Z dimension (mm) (Height from floor to top)
 wall       = 3;     // Wall thickness (mm)
 floor_th   = 5;     // Floor thickness (mm)
 
@@ -38,13 +38,13 @@ $fn = 60;
 // Modules
 // ============================================
 
-// Horseshoe (U-shape) notch cut from top of wall
-module horseshoe_cutout(r, notch_depth, depth) {
-    rotate([90, 0, 0])
+// Horizontal Horseshoe (U-shape) notch cut from front wall towards back
+module horizontal_cutout(r, notch_depth, depth) {
+    rotate([0, 90, 0])
         linear_extrude(height = depth, center = true)
             union() {
                 circle(r = r);
-                translate([-r, 0, 0])
+                translate([-r, -notch_depth])
                     square([r * 2, notch_depth]);
             }
 }
@@ -79,7 +79,7 @@ module protector_body() {
     difference() {
         rounded_box(box_length, box_width, body_h, corner_radius);
 
-        // Hollow interior
+        // Hollow interior (CDHG open top, solid floor at AEBF)
         translate([wall, wall, floor_th])
             rounded_box(
                 box_length - 2 * wall,
@@ -88,15 +88,13 @@ module protector_body() {
                 max(corner_radius - wall, 1)
             );
 
-        // Pipe cutout 1: Left side
-        translate([0, box_width / 2, body_h - pipe_notch_depth])
-            rotate([0, 0, 90])
-                horseshoe_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
+        // Pipe cutout 1: Left side (Horizontal from front wall)
+        translate([0, pipe_notch_depth, box_height / 2])
+            horizontal_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
 
-        // Pipe cutout 2: Right side
-        translate([box_length, box_width / 2, body_h - pipe_notch_depth])
-            rotate([0, 0, 90])
-                horseshoe_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
+        // Pipe cutout 2: Right side (Horizontal from front wall)
+        translate([box_length, pipe_notch_depth, box_height / 2])
+            horizontal_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
     }
 }
 
@@ -135,4 +133,21 @@ module protector_pyramid() {
     pyr_base_w = grip_width  + 2 * pyramid_overhang;
 
     solid_pyramid(pyr_base_l, pyr_base_w, pyramid_height);
+}
+
+// Corner labels for easier rotation reference
+module corner_labels(l, w, h) {
+    color("red") {
+        // Bottom corners (Z=0)
+        translate([-20, -20, 0]) linear_extrude(1) text("A", size=15, align="center", valign="center");
+        translate([l + 20, -20, 0]) linear_extrude(1) text("B", size=15, align="center", valign="center");
+        translate([l + 20, w + 20, 0]) linear_extrude(1) text("C", size=15, align="center", valign="center");
+        translate([-20, w + 20, 0]) linear_extrude(1) text("D", size=15, align="center", valign="center");
+        
+        // Top corners (Z=h)
+        translate([-20, -20, h]) linear_extrude(1) text("E", size=15, align="center", valign="center");
+        translate([l + 20, -20, h]) linear_extrude(1) text("F", size=15, align="center", valign="center");
+        translate([l + 20, w + 20, h]) linear_extrude(1) text("G", size=15, align="center", valign="center");
+        translate([-20, w + 20, h]) linear_extrude(1) text("H", size=15, align="center", valign="center");
+    }
 }
