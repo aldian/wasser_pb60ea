@@ -101,13 +101,13 @@ module protector_body() {
                 max(corner_radius - wall, 1)
             );
 
-        // Pipe cutout 1: Left side (Horizontal from front wall)
-        translate([0, pipe_notch_depth, (box_height / 2) - 10])
-            horizontal_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
+        // Pipe cutout 1: Left side (Horizontal, stopped before front wall)
+        translate([0, pipe_notch_depth, (box_height / 2) - 20])
+            horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
 
-        // Pipe cutout 2: Right side (Horizontal from front wall)
-        translate([box_length, pipe_notch_depth, (box_height / 2) - 10])
-            horizontal_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
+        // Pipe cutout 2: Right side (Horizontal, stopped before front wall)
+        translate([box_length, pipe_notch_depth, (box_height / 2) - 20])
+            horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
     }
 }
 
@@ -152,15 +152,15 @@ module protector_pyramid() {
 module corner_labels(l, w, h) {
     color("red") {
         // Bottom corners (Z=0)
-        translate([-20, -20, 0]) linear_extrude(1) text("A", size=15, align="center", valign="center");
-        translate([l + 20, -20, 0]) linear_extrude(1) text("B", size=15, align="center", valign="center");
-        translate([l + 20, w + 20, 0]) linear_extrude(1) text("C", size=15, align="center", valign="center");
-        translate([-20, w + 20, 0]) linear_extrude(1) text("D", size=15, align="center", valign="center");
+        translate([-20, -20, 0]) linear_extrude(1) text("A", size=15, halign="center", valign="center");
+        translate([l + 20, -20, 0]) linear_extrude(1) text("B", size=15, halign="center", valign="center");
+        translate([l + 20, w + 20, 0]) linear_extrude(1) text("C", size=15, halign="center", valign="center");
+        translate([-20, w + 20, 0]) linear_extrude(1) text("D", size=15, halign="center", valign="center");
         
         // Top corners (Z=h)
-        translate([-20, -20, h]) linear_extrude(1) text("E", size=15, align="center", valign="center");
-        translate([l + 20, -20, h]) linear_extrude(1) text("F", size=15, align="center", valign="center");
-        translate([l + 20, w + 20, h]) linear_extrude(1) text("G", size=15, align="center", valign="center");
-        translate([-20, w + 20, h]) linear_extrude(1) text("H", size=15, align="center", valign="center");
+        translate([-20, -20, h]) linear_extrude(1) text("E", size=15, halign="center", valign="center");
+        translate([l + 20, -20, h]) linear_extrude(1) text("F", size=15, halign="center", valign="center");
+        translate([l + 20, w + 20, h]) linear_extrude(1) text("G", size=15, halign="center", valign="center");
+        translate([-20, w + 20, h]) linear_extrude(1) text("H", size=15, halign="center", valign="center");
     }
 }
