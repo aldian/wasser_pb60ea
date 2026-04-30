@@ -9,9 +9,10 @@
 // --- Main Parameters ---
 box_length = 180;   // X dimension (mm)
 box_width  = 155;   // Y dimension (mm) (Depth from front to back)
-box_height = 140;   // Z dimension (mm) (Height from floor to top)
+box_height = 125;   // Z dimension (mm) (Height from floor to top)
 wall       = 3;     // Wall thickness (mm)
 floor_th   = 5;     // Floor thickness (mm)
+leg_height = 20;    // Height of bottom legs (mm)
 
 // --- Lid Parameters ---
 lid_top_th    = 5;    // Solid top plate thickness (mm)
@@ -89,25 +90,53 @@ module solid_pyramid(base_l, base_w, h) {
 module protector_body() {
     body_h = box_height - lid_top_th;
 
-    difference() {
-        rounded_box(box_length, box_width, body_h, corner_radius);
+    union() {
+        difference() {
+            rounded_box(box_length, box_width, body_h, corner_radius);
 
-        // Hollow interior (CDHG open top, solid floor at AEBF)
-        translate([wall, wall, floor_th])
-            rounded_box(
-                box_length - 2 * wall,
-                box_width  - 2 * wall,
-                body_h - floor_th + 1,
-                max(corner_radius - wall, 1)
-            );
+            // Hollow interior (CDHG open top, solid floor at AEBF)
+            translate([wall, wall, floor_th])
+                rounded_box(
+                    box_length - 2 * wall,
+                    box_width  - 2 * wall,
+                    body_h - floor_th + 1,
+                    max(corner_radius - wall, 1)
+                );
 
-        // Pipe cutout 1: Left side (Horizontal, stopped before front wall)
-        translate([0, pipe_notch_depth, (box_height / 2) - 20])
-            horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
+            // Pipe cutout 1: Left side (Horizontal, stopped before front wall)
+            translate([0, pipe_notch_depth, 50])
+                horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
 
-        // Pipe cutout 2: Right side (Horizontal, stopped before front wall)
-        translate([box_length, pipe_notch_depth, (box_height / 2) - 20])
-            horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
+            // Pipe cutout 2: Right side (Horizontal, stopped before front wall)
+            translate([box_length, pipe_notch_depth, 50])
+                horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
+
+            // 40mm diameter hole on the floor near corner C (back-right)
+            // Moved 1cm towards B (-Y) and 2cm towards D (-X)
+            translate([box_length - 45, box_width - 35, -1])
+                cylinder(d = 40, h = floor_th + 2);
+        }
+
+        // Add 9 legs at the bottom (corners + side centers + exact center)
+        leg_positions = [
+            // 4 Corners
+            [corner_radius, corner_radius],
+            [box_length - corner_radius, corner_radius],
+            [box_length - corner_radius, box_width - corner_radius],
+            [corner_radius, box_width - corner_radius],
+            // 4 Side Centers (AB, BC, CD, AD)
+            [box_length / 2, corner_radius],
+            [box_length - corner_radius, box_width / 2],
+            [box_length / 2, box_width - corner_radius],
+            [corner_radius, box_width / 2],
+            // 1 Bottom Center
+            [box_length / 2, box_width / 2]
+        ];
+
+        for (pos = leg_positions) {
+            translate([pos[0], pos[1], -leg_height])
+                cylinder(r = corner_radius, h = leg_height);
+        }
     }
 }
 
