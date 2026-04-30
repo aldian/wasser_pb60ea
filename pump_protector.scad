@@ -38,14 +38,27 @@ $fn = 60;
 // Modules
 // ============================================
 
-// Horizontal Horseshoe (U-shape) notch cut from front wall towards back
+// Horizontal Horseshoe (U-shape) notch cut from front wall towards back,
+// with a 45-degree teardrop/chamfered roof to print without supports.
 module horizontal_cutout(r, notch_depth, depth) {
     rotate([0, 90, 0])
         linear_extrude(height = depth, center = true)
             union() {
+                // The circular part for the pipe
                 circle(r = r);
-                translate([-r, -notch_depth])
-                    square([r * 2, notch_depth]);
+                
+                // The bottom flat part of the slot
+                translate([0, -notch_depth])
+                    square([r, notch_depth]);
+                
+                // The 45-degree self-supporting roof polygon
+                polygon([
+                    [0, -notch_depth],                               // V1: Bottom left of top part
+                    [0, 0],                                          // V2: Center of circle
+                    [-r * sqrt(2)/2, r * sqrt(2)/2],                 // V3: 45-deg tangent on circle
+                    [-r * sqrt(2), 0],                               // V4: Teardrop peak
+                    [-(r * sqrt(2) + notch_depth), -notch_depth]     // V5: Top left roof
+                ]);
             }
 }
 
@@ -89,11 +102,11 @@ module protector_body() {
             );
 
         // Pipe cutout 1: Left side (Horizontal from front wall)
-        translate([0, pipe_notch_depth, box_height / 2])
+        translate([0, pipe_notch_depth, (box_height / 2) - 10])
             horizontal_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
 
         // Pipe cutout 2: Right side (Horizontal from front wall)
-        translate([box_length, pipe_notch_depth, box_height / 2])
+        translate([box_length, pipe_notch_depth, (box_height / 2) - 10])
             horizontal_cutout(cut_radius, pipe_notch_depth + 1, wall * 3);
     }
 }
