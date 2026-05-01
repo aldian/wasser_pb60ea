@@ -28,9 +28,10 @@ pipe_notch_depth = 50;   // How far the U-shape cuts down from the top (mm)
 corner_radius = 5;
 
 // --- Pyramid Parameters ---
-pyramid_overhang = 5;    // How far pyramid base extends beyond lid on each side (mm)
-pyramid_height   = 20;   // Height of the pyramid above the lid plate (mm)
+pyramid_overhang = 19;   // How far pyramid base extends beyond lid on each side (mm)
+pyramid_height   = 22;   // Height of the pyramid above the lid plate (mm)
 pyramid_wall     = 3;    // Wall thickness of the hollow pyramid shell (mm)
+pyramid_top_r    = 2;    // Radius of the rounded apex (mm)
 
 // --- Resolution ---
 $fn = 60;
@@ -76,13 +77,26 @@ module rounded_box(l, w, h, r) {
 // Solid rectangular pyramid
 // Origin: centered at base center, base at z=0, apex at z=h
 module solid_pyramid(base_l, base_w, h) {
-    hull() {
-        // Base rectangle at z=0
-        translate([-base_l/2, -base_w/2, 0])
-            cube([base_l, base_w, 0.01]);
-        // Apex point at z=h
-        translate([0, 0, h])
-            sphere(d=0.02);
+    // We use minkowski to uniformly round all faces, edges, and corners.
+    // A hemisphere is used instead of a full sphere to prevent the bottom from curling under (overhang).
+    r = pyramid_top_r; 
+    
+    minkowski() {
+        hull() {
+            // Base rectangle at z=0, shrunk by 2*r so minkowski restores it to full size
+            translate([-(base_l - 2*r)/2, -(base_w - 2*r)/2, 0])
+                cube([base_l - 2*r, base_w - 2*r, 0.01]);
+            
+            // Apex point, lowered so final height is exactly h
+            translate([0, 0, h - r])
+                cube([0.01, 0.01, 0.01], center=true);
+        }
+        // Upward-facing hemisphere to avoid under-curling
+        difference() {
+            sphere(r = r, $fn=30);
+            translate([0, 0, -r])
+                cube([2*r+2, 2*r+2, 2*r], center=true);
+        }
     }
 }
 
