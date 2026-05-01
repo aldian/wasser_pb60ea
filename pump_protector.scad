@@ -115,6 +115,17 @@ module protector_body() {
             // Moved 1cm towards B (-Y) and 2cm towards D (-X)
             translate([box_length - 45, box_width - 35, -1])
                 cylinder(d = 40, h = floor_th + 2);
+
+            // Drainage pores (12mm diameter) on a 30mm grid
+            for (x = [30 : 30 : box_length - 30]) {
+                for (y = [30 : 30 : box_width - 30]) {
+                    // Only place a pore if it doesn't intersect the 40mm cabling hole
+                    if (norm([x - (box_length - 45), y - (box_width - 35)]) > 30) {
+                        translate([x, y, -1])
+                            cylinder(d = 12, h = floor_th + 2);
+                    }
+                }
+            }
         }
 
         // Add 9 legs at the bottom (corners + side centers + exact center)
