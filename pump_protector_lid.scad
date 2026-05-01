@@ -2,7 +2,7 @@
 // Wasser PB-60EA Booster Pump Protector — LID
 // Print upside down (top surface on build plate).
 // No supports needed.
-// Size: ~187 x 162 x 20 mm
+// Size: ~187 x 162 x 35 mm
 // ============================================
 
 include <pump_protector.scad>

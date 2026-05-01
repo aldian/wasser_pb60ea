@@ -16,7 +16,7 @@ leg_height = 20;    // Height of bottom legs (mm)
 
 // --- Lid Parameters ---
 lid_top_th    = 5;    // Solid top plate thickness (mm)
-lip_height    = 15;   // Outer grip skirt depth (mm)
+lip_height    = 30;   // Outer grip skirt depth (mm)
 lip_clearance = 0.4;  // Gap for easy fit (mm per side)
 
 // --- Pipe Cutout Parameters ---
