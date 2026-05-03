@@ -7,20 +7,23 @@
 // ============================================
 
 // --- Main Parameters ---
-box_length = 180;   // X dimension (mm)
+box_length = 135;   // X dimension (mm)
 box_width  = 155;   // Y dimension (mm) (Depth from front to back)
-box_height = 125;   // Z dimension (mm) (Height from floor to top)
+box_height = 110;   // Z dimension (mm) (Height from floor to top)
 wall       = 3;     // Wall thickness (mm)
 floor_th   = 5;     // Floor thickness (mm)
-leg_height = 20;    // Height of bottom legs (mm)
+leg_height   = 40;    // Height of bottom legs (mm)
+leg_inset    = 15;    // Leg center distance from the box edges
+leg_r_top    = 12;    // Radius of leg at the box junction (wider for strength)
+leg_r_bottom = 7;     // Radius of leg at the ground
 
 // --- Lid Parameters ---
 lid_top_th    = 5;    // Solid top plate thickness (mm)
-lip_height    = 30;   // Outer grip skirt depth (mm)
+lip_height    = 25;   // Outer grip skirt depth (mm)
 lip_clearance = 0.4;  // Gap for easy fit (mm per side)
 
 // --- Pipe Cutout Parameters ---
-cut_width        = 50;   // Width of horseshoe cut (mm)
+cut_width        = 30;   // Width of horseshoe cut (mm)
 cut_radius       = cut_width / 2;
 pipe_notch_depth = 50;   // How far the U-shape cuts down from the top (mm)
 
@@ -118,23 +121,23 @@ module protector_body() {
                 );
 
             // Pipe cutout 1: Left side (Horizontal, stopped before front wall)
-            translate([0, pipe_notch_depth, 50])
+            translate([0, pipe_notch_depth, 55])
                 horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
 
             // Pipe cutout 2: Right side (Horizontal, stopped before front wall)
-            translate([box_length, pipe_notch_depth, 50])
+            translate([box_length, pipe_notch_depth, 55])
                 horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
 
             // 40mm diameter hole on the floor near corner C (back-right)
-            // Moved 1cm towards B (-Y) and 2cm towards D (-X)
-            translate([box_length - 45, box_width - 35, -1])
+            // Positioned flush against the inner right (BC) and back (CD) walls
+            translate([box_length - 23, box_width - 23, -1])
                 cylinder(d = 40, h = floor_th + 2);
 
-            // Drainage pores (12mm diameter) on a 30mm grid
-            for (x = [30 : 30 : box_length - 30]) {
-                for (y = [30 : 30 : box_width - 30]) {
+            // Drainage pores (12mm diameter) on a 30mm grid, shifted 5mm towards AD side and 3mm towards CD side
+            for (x = [25 : 30 : box_length - 30]) {
+                for (y = [33 : 30 : box_width - 30]) {
                     // Only place a pore if it doesn't intersect the 40mm cabling hole
-                    if (norm([x - (box_length - 45), y - (box_width - 35)]) > 30) {
+                    if (norm([x - (box_length - 23), y - (box_width - 23)]) > 30) {
                         translate([x, y, -1])
                             cylinder(d = 12, h = floor_th + 2);
                     }
@@ -142,25 +145,24 @@ module protector_body() {
             }
         }
 
-        // Add 9 legs at the bottom (corners + side centers + exact center)
+        // Add 8 legs at the bottom (corners + side centers + exact center)
         leg_positions = [
-            // 4 Corners
-            [corner_radius, corner_radius],
-            [box_length - corner_radius, corner_radius],
-            [box_length - corner_radius, box_width - corner_radius],
-            [corner_radius, box_width - corner_radius],
+            // 3 Corners (Omitted corner C / back-right to keep cabling hole clear)
+            [leg_inset, leg_inset],
+            [box_length - leg_inset, leg_inset],
+            [leg_inset, box_width - leg_inset],
             // 4 Side Centers (AB, BC, CD, AD)
-            [box_length / 2, corner_radius],
-            [box_length - corner_radius, box_width / 2],
-            [box_length / 2, box_width - corner_radius],
-            [corner_radius, box_width / 2],
+            [box_length / 2, leg_inset],
+            [box_length - leg_inset, box_width / 2],
+            [box_length / 2, box_width - leg_inset],
+            [leg_inset, box_width / 2],
             // 1 Bottom Center
             [box_length / 2, box_width / 2]
         ];
 
         for (pos = leg_positions) {
             translate([pos[0], pos[1], -leg_height])
-                cylinder(r = corner_radius, h = leg_height);
+                cylinder(r1 = leg_r_bottom, r2 = leg_r_top, h = leg_height);
         }
     }
 }
