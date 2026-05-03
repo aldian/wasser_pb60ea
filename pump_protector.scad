@@ -129,15 +129,15 @@ module protector_body() {
                 horizontal_cutout(cut_radius, pipe_notch_depth - wall, wall * 3);
 
             // 40mm diameter hole on the floor near corner C (back-right)
-            // Positioned flush against the inner right (BC) and back (CD) walls
-            translate([box_length - 23, box_width - 23, -1])
+            // Positioned slightly away from the inner right (BC) and back (CD) walls
+            translate([box_length - 28, box_width - 28, -1])
                 cylinder(d = 40, h = floor_th + 2);
 
             // Drainage pores (12mm diameter) on a 30mm grid, shifted 5mm towards AD side and 3mm towards CD side
             for (x = [25 : 30 : box_length - 30]) {
                 for (y = [33 : 30 : box_width - 30]) {
                     // Only place a pore if it doesn't intersect the 40mm cabling hole
-                    if (norm([x - (box_length - 23), y - (box_width - 23)]) > 30) {
+                    if (norm([x - (box_length - 28), y - (box_width - 28)]) > 30) {
                         translate([x, y, -1])
                             cylinder(d = 12, h = floor_th + 2);
                     }
