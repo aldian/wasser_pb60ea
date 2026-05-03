@@ -1,10 +1,13 @@
-# wasser_pb60ea
-A parametric 3D-printable rain protector for the Wasser PB-60EA booster pump, designed in OpenSCAD. The two-piece design features a body with 5mm floor, 3mm walls, and horseshoe cutouts on opposite sides for pipe routing, plus a snap-fit lid with a 15mm outer grip skirt. Fully parametric — adjust dimensions, cut sizes, and clearances with ease.
+# Wasser PB-60EA Booster Pump Protector
 
-## Example Result
+A parametric, 3D-printable rain protector specifically tailored for the Wasser PB-60EA booster pump, fully designed in OpenSCAD. 
 
-![Assembled pump protector](pump_protector_assembled.jpg)
+This robust three-piece enclosure (Body, Lid, and Pyramid Cap) is optimized for weather resistance, efficient drainage, and support-free 3D printing. The model is highly parametric, allowing for easy adjustment of dimensions, clearances, and cutouts.
 
-## Recommended Filament
+## Key Features
 
-Using **TPU filament** is recommended for printing this protector. TPU is flexible enough to make it easy for cleaning — when you need to insert something to wipe the interior of the box, the walls will flex slightly rather than resist, allowing thorough maintenance without risking damage to the print.
+- **Optimized Enclosure**: Internal dimensions are scaled for a snug fit with a 5mm thick floor and 3mm walls.
+- **Conical Support Legs**: Features 8 heavy-duty conical legs (40mm tall) with flared 24mm bases for maximum strength, keeping the pump elevated from pooling ground water. The back-right leg is intentionally omitted to leave a clear path for the cabling hole.
+- **Pipe Routing Cutouts**: 30mm horseshoe (U-shape) side cutouts designed with 45-degree teardrop roofs, allowing them to be printed entirely without support structures.
+- **Weather-Proof Lid & Pyramid Cap**: A two-part roof consisting of a solid lid with a 25mm deep skirt to shield the pipe cutouts from blowing rain, topped with a parametric pyramid cap to deflect heavy water runoff.
+- **Smart Drainage System**: Includes a flush 40mm cabling hole in the back-right corner, alongside a programmatic grid of 12mm drainage pores that automatically calculate distance to avoid intersecting any of the support legs.
