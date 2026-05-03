@@ -23,7 +23,7 @@ lip_height    = 25;   // Outer grip skirt depth (mm)
 lip_clearance = 0.4;  // Gap for easy fit (mm per side)
 
 // --- Pipe Cutout Parameters ---
-cut_width        = 30;   // Width of horseshoe cut (mm)
+cut_width        = 35;   // Width of horseshoe cut (mm)
 cut_radius       = cut_width / 2;
 pipe_notch_depth = 50;   // How far the U-shape cuts down from the top (mm)
 
