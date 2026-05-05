@@ -2,6 +2,9 @@
 
 A parametric, 3D-printable rain protector specifically tailored for the Wasser PB-60EA booster pump, fully designed in OpenSCAD. 
 
+![Wasser PB-60EA Pump Protector Result Example](images/result_example.jpg)
+
+
 This robust three-piece enclosure (Body, Lid, and Pyramid Cap) is optimized for weather resistance, efficient drainage, and support-free 3D printing. The model is highly parametric, allowing for easy adjustment of dimensions, clearances, and cutouts.
 
 ## Key Features
